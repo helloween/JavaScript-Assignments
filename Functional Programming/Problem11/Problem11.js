@@ -1,26 +1,27 @@
 (function () {
   'use strict';
 
-  function memoize (memFn) {
-    var memos = {};
-    var memoize = function(arg) {
+  Function.prototype.memoize = function () {
+    var memos = {},
+        that = this;
 
-      if (!memos.hasOwnProperty(arg)){
-        console.log('Not cached')
-        memos[arg] = memFn.apply(this, arguments);
+    return function(arg) {
+
+      if ( !(arg in memos) ){
+        console.log('Not cached');
+        memos[arg] = that(arg);
       }
 
       return memos[arg];
     };
 
-    return memoize;
   }
 
-  var fn = memoize(function(a) { return a + a; });
+  var fn = (function(a) { return a + a; }).memoize();
   console.log(fn(150));
-  console.log(fn(150));  
+  console.log(fn(150));
   console.log(fn(50));
-  console.log(fn(50)); 
-  console.log(fn(undefined)); 
-  console.log(fn(null)); 
+  console.log(fn(50));
+  console.log(fn(undefined));
+  console.log(fn(null));
 })();

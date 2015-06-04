@@ -1,27 +1,31 @@
 (function () {
   'use strict';
 
-  function curry(fn) {
-    var length = fn.length;
+  Function.prototype.curry = function() {
+      if(typeof this !== 'function')
+        return this;
 
-    function wrap(prev) {
-      return function(arg) {
-        var args = prev.concat(arg);
-        if (args.length < length) {
-          return wrap(args);
-        } else {
-          return fn.apply(this, args);
+      var length = this.length,
+          args = [],
+          that = this;
+
+      function innerCurry() {
+        if(arguments.length)
+          args = args.concat(arguments[0]);
+
+        if(args.length < length)
+          return innerCurry.bind(null);
+        else{
+          return that.apply(null, args);
         }
       }
-    }
 
-    return wrap([]);
+      return innerCurry;
   }
 
 
-
   var fn = function(a, b, c) { return a + b + c; };
-  console.assert(fn(1, 2, 3) === curry(fn)(1)(2)(3));
+  console.assert(fn(1, 2, 3) === fn.curry()(1)(2)(3));
 })(); 
 
 // q: How is it differ from Partial Application?

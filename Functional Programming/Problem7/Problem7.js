@@ -3,7 +3,7 @@
 
   function linearFold(array, callback, initValue) {
     var memo = initValue;
-    if(memo == undefined)
+    if(memo === undefined)
       memo = array.shift();
  
     for(var index = 0; index < array.length; index++)
